@@ -786,7 +786,6 @@ spinloopB: IN 0x15
 	SUB #0x10
 	ST &0
 	BPL spinloopB
-	;327
 	
 	SWAP
 	POP
