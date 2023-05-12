@@ -1,0 +1,9 @@
+ma 3D
+ma 3D
+mw 81F0104002
+ma F0
+ma F0
+mw 0001001001
+mw 0010E09011
+mw 80C4101040
+mdecodeall
