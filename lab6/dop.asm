@@ -1,5 +1,8 @@
+;Программа равномерно по времени выводит в ВУ-6(бегущая строка) цифры от 0 до 9. 
+;Поддерживает типы вывода, которые должны вводиться в ВУ-2
+;A - обычный цвет, B - инверсия цветов. 1 - [0-9], 2 - чётные, 3 - нечётные
 ORG 0x0
-V0: WORD $DEFAULT, 0x180
+V0: WORD $INT0, 0x180
 V1: WORD $DEFAULT, 0x180
 V2: WORD $INT2, 0x180
 V3: WORD $DEFAULT, 0x180
@@ -13,42 +16,67 @@ ORG 0x01F
 DEFAULT: IRET
 typeColor: WORD 0xA
 typeOutput: WORD 0x1
+yes: WORD 0x1 ;Разрешение принта циферки
 START:  DI
     CLA
+    LD #0x8  ;загрузка в аккумулятор MR (1000|0000=1000)
+    OUT 1  ;разрешение прерываний для 0 ВУ
     LD #0xA ;загрузка в аккумулятор MR (1000|0010=1010)
     OUT 5 ;разрешение прерываний для 2 ВУ
     EI
 MAIN: 
 spinloop: LD typeColor
-SUB #0xB
+CMP #0xB
 BEQ print_invert
+
 print:LD typeOutput
-SUB #0x1
+CMP #0x1
 BEQ natural
+
 LD typeOutput
-SUB #0x2
+CMP #0x2
 BEQ even
 
-odd: CALL $print1
-CALL $print3
-CALL $print5
-CALL $print7
-CALL $print9
-JUMP ju
-natural: CALL $print0
+odd: CALL $WaitYes
 CALL $print1
-CALL $print2
+CALL $WaitYes
 CALL $print3
-CALL $print4
+CALL $WaitYes
 CALL $print5
-CALL $print6
+CALL $WaitYes
 CALL $print7
-CALL $print8
+CALL $WaitYes
 CALL $print9
 JUMP ju
-even:CALL $print2
+natural:
+CALL $WaitYes
+CALL $print0
+CALL $WaitYes
+CALL $print1
+CALL $WaitYes
+CALL $print2
+CALL $WaitYes
+CALL $print3
+CALL $WaitYes
 CALL $print4
+CALL $WaitYes
+CALL $print5
+CALL $WaitYes
 CALL $print6
+CALL $WaitYes
+CALL $print7
+CALL $WaitYes
+CALL $print8
+CALL $WaitYes
+CALL $print9
+JUMP ju
+even:CALL $WaitYes
+CALL $print2
+CALL $WaitYes
+CALL $print4
+CALL $WaitYes
+CALL $print6
+CALL $WaitYes
 CALL $print8
 JUMP ju
 
@@ -60,32 +88,64 @@ LD typeOutput
 SUB #0x2
 BEQ even1
 
-odd1: CALL $printNeg1
-CALL $printNeg3
-CALL $printNeg5
-CALL $printNeg7
-CALL $printNeg9
-JUMP ju
-natural1: CALL $printNeg0
+odd1: CALL $WaitYes
 CALL $printNeg1
-CALL $printNeg2
+CALL $WaitYes
 CALL $printNeg3
-CALL $printNeg4
+CALL $WaitYes
 CALL $printNeg5
-CALL $printNeg6
+CALL $WaitYes
 CALL $printNeg7
-CALL $printNeg8
+CALL $WaitYes
 CALL $printNeg9
 JUMP ju
-even1:CALL $printNeg2
+natural1: CALL $WaitYes
+CALL $printNeg0
+CALL $WaitYes
+CALL $printNeg1
+CALL $WaitYes
+CALL $printNeg2
+CALL $WaitYes
+CALL $printNeg3
+CALL $WaitYes
 CALL $printNeg4
+CALL $WaitYes
+CALL $printNeg5
+CALL $WaitYes
 CALL $printNeg6
+CALL $WaitYes
+CALL $printNeg7
+CALL $WaitYes
 CALL $printNeg8
-
-
+CALL $WaitYes
+CALL $printNeg9
+JUMP ju
+even1:CALL $WaitYes
+CALL $printNeg2
+CALL $WaitYes
+CALL $printNeg4
+CALL $WaitYes
+CALL $printNeg6
+CALL $WaitYes
+CALL $printNeg8
 ju: JUMP MAIN
 
 
+WaitYes:LD yes
+BEQ WaitYes
+CLA
+ST yes
+RET
+
+
+INT0: ;обработка прерывания на ВУ-0
+    PUSH
+    LD #0x1
+    ST yes
+    LD #0x9
+    OUT 0x0
+    POP
+IRET
 
 
 INT2: ;обработка прерывания на ВУ-2
