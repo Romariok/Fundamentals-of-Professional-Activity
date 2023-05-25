@@ -9,3 +9,4 @@
 ![lab4](https://user-images.githubusercontent.com/82483966/235434987-d3661f61-9810-40fe-859b-d8d36c325e16.png)
 ![lab5](https://user-images.githubusercontent.com/82483966/235434994-84b8a046-9202-4f39-a1b8-217572f92183.png)
 ![lab6](https://user-images.githubusercontent.com/82483966/235435005-d9a3248c-d189-477d-aae8-3471a5daa3ad.png)
+![lab7](https://github.com/Romariok/Fundamentals-of-Professional-Activity/assets/82483966/9054cff1-a715-4859-bab9-19af5795b1a3)
